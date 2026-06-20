@@ -38,3 +38,8 @@ D:\projetos\controle-fermentacao (ArBrain)\backend\ControleFermentacao.API\obj\D
 D:\projetos\controle-fermentacao (ArBrain)\backend\ControleFermentacao.API\obj\Debug\net10.0\ControleFermentacao.API.pdb
 D:\projetos\controle-fermentacao (ArBrain)\backend\ControleFermentacao.API\obj\Debug\net10.0\ControleFermentacao.API.genruntimeconfig.cache
 D:\projetos\controle-fermentacao (ArBrain)\backend\ControleFermentacao.API\obj\Debug\net10.0\ref\ControleFermentacao.API.dll
+D:\projetos\controle-fermentacao (ArBrain)\backend\ControleFermentacao.API\bin\Debug\net10.0\Microsoft.EntityFrameworkCore.dll
+D:\projetos\controle-fermentacao (ArBrain)\backend\ControleFermentacao.API\bin\Debug\net10.0\Microsoft.EntityFrameworkCore.Abstractions.dll
+D:\projetos\controle-fermentacao (ArBrain)\backend\ControleFermentacao.API\bin\Debug\net10.0\Microsoft.EntityFrameworkCore.Relational.dll
+D:\projetos\controle-fermentacao (ArBrain)\backend\ControleFermentacao.API\bin\Debug\net10.0\Npgsql.dll
+D:\projetos\controle-fermentacao (ArBrain)\backend\ControleFermentacao.API\bin\Debug\net10.0\Npgsql.EntityFrameworkCore.PostgreSQL.dll

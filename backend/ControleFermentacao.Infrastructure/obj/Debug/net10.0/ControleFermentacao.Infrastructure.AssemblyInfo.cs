@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ControleFermentacao.Infrastructure")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+809c6d94bcefa7a8ab6d2bf69375517018775457")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+9fe7dfea3800ff7ed781491d254769f568c82688")]
 [assembly: System.Reflection.AssemblyProductAttribute("ControleFermentacao.Infrastructure")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ControleFermentacao.Infrastructure")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

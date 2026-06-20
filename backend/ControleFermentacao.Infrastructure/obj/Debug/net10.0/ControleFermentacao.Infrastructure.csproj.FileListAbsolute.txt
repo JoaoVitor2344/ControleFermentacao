@@ -16,3 +16,5 @@ D:\projetos\controle-fermentacao (ArBrain)\backend\ControleFermentacao.Infrastru
 D:\projetos\controle-fermentacao (ArBrain)\backend\ControleFermentacao.Infrastructure\obj\Debug\net10.0\refint\ControleFermentacao.Infrastructure.dll
 D:\projetos\controle-fermentacao (ArBrain)\backend\ControleFermentacao.Infrastructure\obj\Debug\net10.0\ControleFermentacao.Infrastructure.pdb
 D:\projetos\controle-fermentacao (ArBrain)\backend\ControleFermentacao.Infrastructure\obj\Debug\net10.0\ref\ControleFermentacao.Infrastructure.dll
+D:\projetos\controle-fermentacao (ArBrain)\backend\ControleFermentacao.Infrastructure\bin\Debug\net10.0\ControleFermentacao.Infrastructure.runtimeconfig.json
+D:\projetos\controle-fermentacao (ArBrain)\backend\ControleFermentacao.Infrastructure\obj\Debug\net10.0\ControleFermentacao.Infrastructure.genruntimeconfig.cache

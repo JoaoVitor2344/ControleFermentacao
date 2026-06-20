@@ -1,0 +1,8 @@
+﻿using ControleFermentacao.Domain.Entities;
+
+namespace ControleFermentacao.Domain.Interfaces;
+
+public interface IBeerRepository
+{
+    Task<Beer?> GetByIdAsync(Guid id);
+}

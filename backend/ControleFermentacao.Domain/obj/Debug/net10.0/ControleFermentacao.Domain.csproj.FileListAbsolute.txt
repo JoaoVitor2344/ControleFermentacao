@@ -10,3 +10,4 @@ D:\projetos\controle-fermentacao (ArBrain)\backend\ControleFermentacao.Domain\ob
 D:\projetos\controle-fermentacao (ArBrain)\backend\ControleFermentacao.Domain\obj\Debug\net10.0\refint\ControleFermentacao.Domain.dll
 D:\projetos\controle-fermentacao (ArBrain)\backend\ControleFermentacao.Domain\obj\Debug\net10.0\ControleFermentacao.Domain.pdb
 D:\projetos\controle-fermentacao (ArBrain)\backend\ControleFermentacao.Domain\obj\Debug\net10.0\ref\ControleFermentacao.Domain.dll
+D:\projetos\controle-fermentacao (ArBrain)\backend\ControleFermentacao.Domain\obj\Debug\net10.0\ControleFermentacao.Domain.csproj.AssemblyReference.cache
