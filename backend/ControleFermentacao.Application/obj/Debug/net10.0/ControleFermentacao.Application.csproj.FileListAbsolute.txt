@@ -1,0 +1,16 @@
+D:\projetos\controle-fermentacao (ArBrain)\backend\ControleFermentacao.Application\bin\Debug\net10.0\ControleFermentacao.Application.deps.json
+D:\projetos\controle-fermentacao (ArBrain)\backend\ControleFermentacao.Application\bin\Debug\net10.0\ControleFermentacao.Application.dll
+D:\projetos\controle-fermentacao (ArBrain)\backend\ControleFermentacao.Application\bin\Debug\net10.0\ControleFermentacao.Application.pdb
+D:\projetos\controle-fermentacao (ArBrain)\backend\ControleFermentacao.Application\bin\Debug\net10.0\ControleFermentacao.Domain.dll
+D:\projetos\controle-fermentacao (ArBrain)\backend\ControleFermentacao.Application\bin\Debug\net10.0\ControleFermentacao.Domain.pdb
+D:\projetos\controle-fermentacao (ArBrain)\backend\ControleFermentacao.Application\obj\Debug\net10.0\ControleFermentacao.Application.csproj.AssemblyReference.cache
+D:\projetos\controle-fermentacao (ArBrain)\backend\ControleFermentacao.Application\obj\Debug\net10.0\ControleFermentacao.Application.GeneratedMSBuildEditorConfig.editorconfig
+D:\projetos\controle-fermentacao (ArBrain)\backend\ControleFermentacao.Application\obj\Debug\net10.0\ControleFermentacao.Application.AssemblyInfoInputs.cache
+D:\projetos\controle-fermentacao (ArBrain)\backend\ControleFermentacao.Application\obj\Debug\net10.0\ControleFermentacao.Application.AssemblyInfo.cs
+D:\projetos\controle-fermentacao (ArBrain)\backend\ControleFermentacao.Application\obj\Debug\net10.0\ControleFermentacao.Application.csproj.CoreCompileInputs.cache
+D:\projetos\controle-fermentacao (ArBrain)\backend\ControleFermentacao.Application\obj\Debug\net10.0\ControleFermentacao.Application.sourcelink.json
+D:\projetos\controle-fermentacao (ArBrain)\backend\ControleFermentacao.Application\obj\Debug\net10.0\Controle.D21798BF.Up2Date
+D:\projetos\controle-fermentacao (ArBrain)\backend\ControleFermentacao.Application\obj\Debug\net10.0\ControleFermentacao.Application.dll
+D:\projetos\controle-fermentacao (ArBrain)\backend\ControleFermentacao.Application\obj\Debug\net10.0\refint\ControleFermentacao.Application.dll
+D:\projetos\controle-fermentacao (ArBrain)\backend\ControleFermentacao.Application\obj\Debug\net10.0\ControleFermentacao.Application.pdb
+D:\projetos\controle-fermentacao (ArBrain)\backend\ControleFermentacao.Application\obj\Debug\net10.0\ref\ControleFermentacao.Application.dll

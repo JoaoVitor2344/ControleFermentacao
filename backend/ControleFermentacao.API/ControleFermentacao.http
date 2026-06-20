@@ -1,0 +1,6 @@
+@ControleFermentacao_HostAddress = http://localhost:5106
+
+GET {{ControleFermentacao_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

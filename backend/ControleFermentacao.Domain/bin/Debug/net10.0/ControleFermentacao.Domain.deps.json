@@ -1,0 +1,23 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v10.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v10.0": {
+      "ControleFermentacao.Domain/1.0.0": {
+        "runtime": {
+          "ControleFermentacao.Domain.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "ControleFermentacao.Domain/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

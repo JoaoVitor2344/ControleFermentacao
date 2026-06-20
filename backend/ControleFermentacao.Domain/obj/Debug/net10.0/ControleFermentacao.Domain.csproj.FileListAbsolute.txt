@@ -1,0 +1,12 @@
+D:\projetos\controle-fermentacao (ArBrain)\backend\ControleFermentacao.Domain\bin\Debug\net10.0\ControleFermentacao.Domain.deps.json
+D:\projetos\controle-fermentacao (ArBrain)\backend\ControleFermentacao.Domain\bin\Debug\net10.0\ControleFermentacao.Domain.dll
+D:\projetos\controle-fermentacao (ArBrain)\backend\ControleFermentacao.Domain\bin\Debug\net10.0\ControleFermentacao.Domain.pdb
+D:\projetos\controle-fermentacao (ArBrain)\backend\ControleFermentacao.Domain\obj\Debug\net10.0\ControleFermentacao.Domain.GeneratedMSBuildEditorConfig.editorconfig
+D:\projetos\controle-fermentacao (ArBrain)\backend\ControleFermentacao.Domain\obj\Debug\net10.0\ControleFermentacao.Domain.AssemblyInfoInputs.cache
+D:\projetos\controle-fermentacao (ArBrain)\backend\ControleFermentacao.Domain\obj\Debug\net10.0\ControleFermentacao.Domain.AssemblyInfo.cs
+D:\projetos\controle-fermentacao (ArBrain)\backend\ControleFermentacao.Domain\obj\Debug\net10.0\ControleFermentacao.Domain.csproj.CoreCompileInputs.cache
+D:\projetos\controle-fermentacao (ArBrain)\backend\ControleFermentacao.Domain\obj\Debug\net10.0\ControleFermentacao.Domain.sourcelink.json
+D:\projetos\controle-fermentacao (ArBrain)\backend\ControleFermentacao.Domain\obj\Debug\net10.0\ControleFermentacao.Domain.dll
+D:\projetos\controle-fermentacao (ArBrain)\backend\ControleFermentacao.Domain\obj\Debug\net10.0\refint\ControleFermentacao.Domain.dll
+D:\projetos\controle-fermentacao (ArBrain)\backend\ControleFermentacao.Domain\obj\Debug\net10.0\ControleFermentacao.Domain.pdb
+D:\projetos\controle-fermentacao (ArBrain)\backend\ControleFermentacao.Domain\obj\Debug\net10.0\ref\ControleFermentacao.Domain.dll
