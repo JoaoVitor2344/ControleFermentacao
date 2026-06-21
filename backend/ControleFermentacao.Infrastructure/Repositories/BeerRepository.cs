@@ -17,4 +17,10 @@ public class BeerRepository : IBeerRepository
     {
         return await _context.Beers.FindAsync(id);
     }
+
+    public async Task AddAsync(Beer beer)
+    {
+        await _context.Beers.AddAsync(beer);
+        await _context.SaveChangesAsync();
+    }
 }

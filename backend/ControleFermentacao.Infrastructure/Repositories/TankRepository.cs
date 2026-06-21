@@ -17,4 +17,10 @@ public class TankRepository : ITankRepository
     {
         return await _context.Tanks.FindAsync(id);
     }
+
+    public async Task AddAsync(Tank tank)
+    {
+        await _context.Tanks.AddAsync(tank);
+        await _context.SaveChangesAsync();
+    }
 }
