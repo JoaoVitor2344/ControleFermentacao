@@ -65,6 +65,34 @@ mesma estrutura de versionamento.
 
 ---
 
+## 🚀 Como Executar e Testar a API
+
+A aplicação foi construída para oferecer uma experiência de desenvolvimento simples e direta. A documentação interativa
+dos endpoints é gerada automaticamente pelo **Swagger**.
+
+### Pré-requisitos
+
+* [.NET 10 SDK](https://dotnet.microsoft.com/download)
+* [PostgreSQL](https://www.postgresql.org/download/) (Local ou via Docker)
+* IDE de sua preferência (Rider, Visual Studio, VS Code)
+
+### Passos para Execução
+
+1. Clone o repositório.
+2. Na raiz do projeto `ControleFermentacao.API`, configure a *Connection String* do PostgreSQL no arquivo
+   `appsettings.json`.
+3. Abra um terminal na pasta `ControleFermentacao.Infrastructure` e rode as migrações para criar o banco de dados:
+
+```bash
+dotnet ef database update --startup-project ../ControleFermentacao.API
+```
+
+4. Execute o projeto `ControleFermentacao.API`.
+5. O navegador abrirá automaticamente na interface do **Swagger** (ex: `https://localhost:7001/swagger`), onde você
+   poderá testar o endpoint `POST /api/fermentation/records` enviando o payload JSON diretamente pela interface gráfica.
+
+---
+
 ## Regras de Negócio e Premissas Adotadas
 
 ### Classificação Dinâmica do Status Fermentativo (`FermentationStatus`)
@@ -106,17 +134,19 @@ biológicos e químicos reais encontrados em cervejarias comerciais:
    fermentação.
 
 *
-*Referência:* [Esters and Fusel Alcohols - Scott Janish (Review de Estudos Científicos)](https://scottjanish.com/esters-and-fusel-alcohols/)
 
+*Referência:* [Esters and Fusel Alcohols - Scott Janish (Review de Estudos Científicos)](https://scottjanish.com/esters-and-fusel-alcohols/)
 
 2. **Monitoramento Químico e Sanidade do Lote (pH):** O pH ao longo da fermentação saudável segue uma linha extremamente
    tênue (geralmente estabilizando entre 4.1 e 4.4).
 
 *
-*Referência:* [Understanding The pH Of Beer - Atlas Scientific (Industrial Instrumentation)](https://atlas-scientific.com/blog/ph-of-beer/)
-*
-*Referência:* [The Role of pH in Brewing - Brew Your Own (BYO Journal)](https://byo.com/articles/the-role-of-ph-in-brewing/)
 
+*Referência:* [Understanding The pH Of Beer - Atlas Scientific (Industrial Instrumentation)](https://atlas-scientific.com/blog/ph-of-beer/)
+
+*
+
+*Referência:* [The Role of pH in Brewing - Brew Your Own (BYO Journal)](https://byo.com/articles/the-role-of-ph-in-brewing/)
 
 3. **Cartas de Controle Industrial (SPC):** O modelo algorítmico preditivo de emitir um sinal de "Atenção" nas
    extremidades mimetiza os softwares de automação de salas de controle, que disparam alarmes visuais preventivos quando
@@ -124,6 +154,7 @@ biológicos e químicos reais encontrados em cervejarias comerciais:
    cervejeiro antes do descarte total do lote.
 
 *
+
 *Referência:* [Monitoring Saccharification Process in Brewery Industry Using Quality Control Charts - ResearchGate (Scientific Publication)](https://www.researchgate.net/publication/305741109_Monitoring_Saccharification_Process_in_Brewery_Industry_Using_Quality_Control_Charts)
 
 ---
