@@ -27,4 +27,12 @@ public class FermentationRecordRepository : IFermentationRecordRepository
             .GroupBy(f => f.Status)
             .ToDictionaryAsync(g => g.Key, g => g.Count());
     }
+
+    public async Task<IEnumerable<FermentationRecord>> GetByBatchNumberAsync(string batchNumber)
+    {
+        return await _context.FermentationRecords
+            .Where(f => f.BatchNumber == batchNumber)
+            .OrderBy(f => f.BatchNumber)
+            .ToListAsync();
+    }
 }
