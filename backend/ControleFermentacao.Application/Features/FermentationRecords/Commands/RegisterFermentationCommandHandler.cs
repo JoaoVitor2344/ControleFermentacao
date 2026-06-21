@@ -44,7 +44,7 @@ public class RegisterFermentationCommandHandler : IRequestHandler<RegisterFermen
             request.Ph,
             request.Extract,
             request.Notes,
-            request.RecordedAt,
+            DateTime.UtcNow,
             beer
         );
 

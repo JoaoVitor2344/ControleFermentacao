@@ -11,5 +11,4 @@ public class RegisterFermentationCommand : IRequest<Guid>
     public decimal Ph { get; set; }
     public decimal Extract { get; set; }
     public string Notes { get; set; } = string.Empty;
-    public DateTime RecordedAt { get; set; }
 }
