@@ -300,6 +300,20 @@ de avançar.
 
 ### 3. Quais melhorias você implementaria se tivesse mais tempo?
 
+As melhorias abaixo foram **efetivamente implementadas** durante o desenvolvimento, além do escopo mínimo do desafio:
+
+* **Soft Delete (Exclusão Lógica):** Cervejas e Tanques nunca são removidos fisicamente do banco. O campo `DeletedAt`
+  é preenchido na exclusão e um filtro global no `AppDbContext` os oculta automaticamente das consultas padrão. O
+  parâmetro `?includeDeleted=true` permite auditá-los quando necessário — decisão motivada pelas exigências de
+  rastreabilidade do MAPA.
+* **Formatação Decimal pt-BR:** Todos os valores numéricos exibidos na interface usam vírgula como separador decimal
+  (ex: `12,50` em vez de `12.50`), por meio de um utilitário centralizado `formatDecimal` com `toLocaleString('pt-BR')`.
+* **Gráfico de Evolução do Lote:** O Histórico de Lotes exibe um gráfico de linha interativo (biblioteca *recharts*)
+  com a evolução de Temperatura, pH e Extrato ao longo do tempo, facilitando a visualização de tendências fermentativas
+  pelo mestre cervejeiro.
+
+Melhorias que ficariam para uma próxima iteração:
+
 * **Containerização Completa:** Criação de múltiplos estágios no `Dockerfile` para a API .NET e o frontend React,
   unificados por um arquivo `docker-compose.yml` contendo uma instância pré-configurada de banco de dados PostgreSQL,
   permitindo subir toda a stack com um único comando.
