@@ -28,6 +28,9 @@ namespace ControleFermentacao.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<decimal>("MaxExtract")
                         .HasPrecision(5, 2)
                         .HasColumnType("numeric(5,2)");
@@ -122,6 +125,9 @@ namespace ControleFermentacao.Infrastructure.Migrations
                     b.Property<decimal>("CapacityLiters")
                         .HasPrecision(10, 2)
                         .HasColumnType("numeric(10,2)");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Name")
                         .IsRequired()

@@ -15,9 +15,15 @@ public class AppDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        // ela percorre o nosso projeto Infrastructure e aplica 
+        // ela percorre o projeto Infrastructure e aplica 
         // todas as classes que herdam de IEntityTypeConfiguration
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
         base.OnModelCreating(modelBuilder);
+
+        // Filtro global para Cervejas
+        modelBuilder.Entity<Beer>().HasQueryFilter(b => b.DeletedAt == null);
+
+        // Filtro global para Tanques
+        modelBuilder.Entity<Tank>().HasQueryFilter(t => t.DeletedAt == null);
     }
 }

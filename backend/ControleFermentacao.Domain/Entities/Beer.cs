@@ -14,6 +14,9 @@ public class Beer
     public decimal MinExtract { get; private set; }
     public decimal MaxExtract { get; private set; }
 
+    // SoftDelete
+    public DateTime? DeletedAt { get; private set; }
+
     // Construtor para o Entity Framework
     public Beer(string name, string style, decimal minTemperature, decimal maxTemperature, decimal minPh, decimal maxPh,
         decimal minExtract, decimal maxExtract)
@@ -27,5 +30,23 @@ public class Beer
         MaxPh = maxPh;
         MinExtract = minExtract;
         MaxExtract = maxExtract;
+    }
+
+    public void Update(string name, string style, decimal minTemperature, decimal maxTemperature,
+        decimal minPh, decimal maxPh, decimal minExtract, decimal maxExtract)
+    {
+        Name = name;
+        Style = style;
+        MinTemperature = minTemperature;
+        MaxTemperature = maxTemperature;
+        MinPh = minPh;
+        MaxPh = maxPh;
+        MinExtract = minExtract;
+        MaxExtract = maxExtract;
+    }
+
+    public void Delete()
+    {
+        DeletedAt = DateTime.UtcNow;
     }
 }
