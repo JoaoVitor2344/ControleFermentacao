@@ -1,4 +1,4 @@
-# ControleFermentacao
+﻿# ControleFermentacaoCervejeira
 
 Este projeto foi desenvolvido como parte do processo seletivo da **ArBrain** para a avaliação de competências técnicas
 em Engenharia de Software. A aplicação tem como objetivo monitorar dados fermentativos, garantindo o controle de
@@ -16,13 +16,13 @@ mesma estrutura de versionamento.
 
 ### Divisão em Camadas (Backend)
 
-1. **ControleFermentacao.Domain:** Totalmente isolado e agnóstico a frameworks, bancos de dados ou APIs. Contém as
+1. **ControleFermentacaoCervejeira.Domain:** Totalmente isolado e agnóstico a frameworks, bancos de dados ou APIs. Contém as
    entidades ricas do sistema (`Beer`, `Tank`, `FermentationRecord`), os Enums e as regras de negócio puras.
-2. **ControleFermentacao.Application:** Depende apenas do Domínio. Implementa o padrão CQRS estruturado por *Features*
+2. **ControleFermentacaoCervejeira.Application:** Depende apenas do Domínio. Implementa o padrão CQRS estruturado por *Features*
    (funcionalidades). Contém os *Commands*, *Queries*, seus respectivos *Handlers* e DTOs (Data Transfer Objects).
-3. **ControleFermentacao.Infrastructure:** Depende da Application e do Domínio. Contém a infraestrutura de acesso a
+3. **ControleFermentacaoCervejeira.Infrastructure:** Depende da Application e do Domínio. Contém a infraestrutura de acesso a
    dados usando o Entity Framework Core, mapeamentos Fluent API, migrações e implementações de repositórios.
-4. **ControleFermentacao.API:** Depende da Application e da Infrastructure. É a camada de apresentação HTTP, responsável
+4. **ControleFermentacaoCervejeira.API:** Depende da Application e da Infrastructure. É a camada de apresentação HTTP, responsável
    apenas por receber requisições, delegar ao MediatR e retornar as respostas com os devidos códigos de status HTTP.
 
 ---
@@ -31,27 +31,27 @@ mesma estrutura de versionamento.
 
 ```text
 ├── backend\                                    
-│   ├── ControleFermentacao.sln                 <-- Arquivo da Solution
+│   ├── ControleFermentacaoCervejeira.sln                 <-- Arquivo da Solution
 │   │
-│   ├── ControleFermentacao.API\                <-- Projeto Web API (.NET 10.0)
+│   ├── ControleFermentacaoCervejeira.API\                <-- Projeto Web API (.NET 10.0)
 │   │   ├── Controllers\                        (BeersController, TanksController, FermentationController)
 │   │   ├── Properties\                         (launchSettings.json)
 │   │   ├── appsettings.json
 │   │   └── Program.cs
 │   │
-│   ├── ControleFermentacao.Domain\             <-- Class Library (Regras de negócio puras)
+│   ├── ControleFermentacaoCervejeira.Domain\             <-- Class Library (Regras de negócio puras)
 │   │   ├── Entities\                           (Beer.cs, Tank.cs, FermentationRecord.cs)
 │   │   ├── Enums\                              (FermentationStatus.cs)
 │   │   └── Interfaces\                         (IBeerRepository, ITankRepository, IFermentationRecordRepository)
 │   │
-│   ├── ControleFermentacao.Application\        <-- Class Library (CQRS com MediatR)
+│   ├── ControleFermentacaoCervejeira.Application\        <-- Class Library (CQRS com MediatR)
 │   │   ├── Features\                           (Organização por Funcionalidade)
 │   │   │   ├── Beers\                          (Commands e Queries de Cervejas)
 │   │   │   ├── Tanks\                          (Commands e Queries de Tanques)
 │   │   │   └── FermentationRecords\            (Commands, Queries e DTOs de Apontamentos)
 │   │   └── DependencyInjection.cs              (Registro do MediatR no container de DI)
 │   │
-│   └── ControleFermentacao.Infrastructure\     <-- Class Library (Persistência / EF Core)
+│   └── ControleFermentacaoCervejeira.Infrastructure\     <-- Class Library (Persistência / EF Core)
 │       ├── Data\
 │       │   ├── Context\                        (AppDbContext.cs)
 │       │   ├── Mappings\                       (Configurações Fluent API)
@@ -103,18 +103,18 @@ dos endpoints é gerada automaticamente pelo **Swagger**.
 ### Passos para Execução
 
 1. Clone o repositório.
-2. Na raiz do projeto `ControleFermentacao.API`, configure a *Connection String* do PostgreSQL no arquivo
+2. Na raiz do projeto `ControleFermentacaoCervejeira.API`, configure a *Connection String* do PostgreSQL no arquivo
    `appsettings.json`:
    ```json
    "ConnectionStrings": {
-     "DefaultConnection": "Host=localhost;Port=5432;Database=ControleFermentacaoDb;Username=postgres;Password=postgres"
+     "DefaultConnection": "Host=localhost;Port=5432;Database=ControleFermentacaoCervejeiraDb;Username=postgres;Password=postgres"
    }
    ```
-3. Abra um terminal na pasta `ControleFermentacao.Infrastructure` e rode as migrações para criar o banco de dados:
+3. Abra um terminal na pasta `ControleFermentacaoCervejeira.Infrastructure` e rode as migrações para criar o banco de dados:
    ```bash
-   dotnet ef database update --startup-project ../ControleFermentacao.API
+   dotnet ef database update --startup-project ../ControleFermentacaoCervejeira.API
    ```
-4. Execute o projeto `ControleFermentacao.API`.
+4. Execute o projeto `ControleFermentacaoCervejeira.API`.
 5. O navegador abrirá automaticamente na interface do **Swagger** (`http://localhost:5106/swagger`), onde você
    poderá testar todos os endpoints disponíveis.
 
@@ -250,9 +250,9 @@ A solução backend foi estruturada com **Clean Architecture** e o padrão **CQR
   mapeamento foi feito via *Fluent API* no Entity Framework. Além disso, configurei políticas estritas de chave
   estrangeira (`DeleteBehavior.Restrict`) para impedir a exclusão acidental de Tanques ou Cervejas que já possuam
   apontamentos, garantindo a integridade histórica exigida por órgãos reguladores como o MAPA.
-* **`RecordedAt` definido pelo servidor:** O timestamp de cada apontamento é gerado com `DateTime.UtcNow` no handler,
-  nunca recebido pelo cliente. Isso garante consistência independente do fuso horário ou relógio do dispositivo do
-  operador.
+* **`RecordedAt` definido pelo servidor:** O timestamp de cada apontamento é gerado no handler com a hora local de
+  Brasília (UTC-3), nunca recebido pelo cliente. Isso garante consistência independente do fuso horário ou relógio do
+  dispositivo do operador.
 
 **Frontend:**
 
@@ -311,8 +311,5 @@ de avançar.
 * **Processamento Assíncrono (Mensageria):** Substituição do salvamento síncrono por mensageria (ex: RabbitMQ). Em uma
   fábrica real com centenas de sensores IoT transmitindo telemetria em tempo real, os dados seriam postados em uma fila
   de alta vazão e ingeridos de forma assíncrona para não estressar as conexões de banco de dados.
-* **Gráfico de Evolução do Lote:** No Histórico de Lotes, exibir um gráfico de linha (temperatura, pH e extrato ao
-  longo do tempo) para visualização da tendência fermentativa, tornando a análise mais intuitiva para o mestre
-  cervejeiro.
 * **Listagem de Lotes Disponíveis:** Adicionar um endpoint `GET /api/fermentation/batches` que retorne todos os números
   de lote distintos, permitindo que o frontend exiba um select em vez de um campo de texto livre no Histórico de Lotes.
