@@ -13,14 +13,15 @@ public class FermentationRecord
     public decimal Temperature { get; private set; }
     public decimal Ph { get; private set; }
     public decimal Extract { get; private set; }
-    public decimal Notes { get; private set; }
+
+    public string Notes { get; private set; }
 
     // Controle
     public FermentationStatus Status { get; private set; }
     public DateTime RecordedAt { get; private set; }
 
     public FermentationRecord(Guid beerId, Guid tankId, string batchNumber, decimal temperature, decimal ph,
-        decimal extract, decimal notes, DateTime recordedAt)
+        decimal extract, string notes, DateTime recordedAt, Beer beerLimits)
     {
         Id = Guid.NewGuid();
         BeerId = beerId;
@@ -33,7 +34,7 @@ public class FermentationRecord
         RecordedAt = recordedAt;
 
         // O status é calculado automaticamente no momento da criação do registro
-        // Status = CalculateStatus(beerLimits);
+        Status = CalculateStatus(beerLimits);
     }
 
     private FermentationStatus CalculateStatus(Beer beer)
