@@ -1,4 +1,5 @@
 ﻿using ControleFermentacao.Application.Features.FermentationRecords.Commands;
+using ControleFermentacao.Application.Features.FermentationRecords.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -28,6 +29,36 @@ public class FermentationController : ControllerBase
                 Message = "Apontamento de fermentação registrado com sucesso",
                 RecordId = recordId
             });
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { Error = ex.Message });
+        }
+    }
+
+    [HttpGet("summary")]
+    public async Task<IActionResult> GetSummaryAsync()
+    {
+        try
+        {
+            var summary = await _mediator.Send(new GetFermentationSummaryQuery());
+            return Ok(summary);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex);
+            throw;
+        }
+    }
+
+    [HttpGet("batch/{batchNumber}")]
+    public async Task<IActionResult> GetByBatch(string batchNumber)
+    {
+        try
+        {
+            var query = new GetFermentationRecordsByBatchQuery(batchNumber);
+            var records = await _mediator.Send(query);
+            return Ok(records);
         }
         catch (Exception ex)
         {

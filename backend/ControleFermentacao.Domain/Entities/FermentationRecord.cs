@@ -20,6 +20,12 @@ public class FermentationRecord
     public FermentationStatus Status { get; private set; }
     public DateTime RecordedAt { get; private set; }
 
+    private FermentationRecord()
+    {
+        BatchNumber = null!;
+        Notes = null!;
+    }
+
     public FermentationRecord(Guid beerId, Guid tankId, string batchNumber, decimal temperature, decimal ph,
         decimal extract, string notes, DateTime recordedAt, Beer beerLimits)
     {

@@ -5,4 +5,5 @@ namespace ControleFermentacao.Domain.Interfaces;
 public interface IBeerRepository
 {
     Task<Beer?> GetByIdAsync(Guid id);
+    Task AddAsync(Beer beer);
 }

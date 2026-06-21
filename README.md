@@ -65,7 +65,7 @@ mesma estrutura de versionamento.
 
 ---
 
-## 🚀 Como Executar e Testar a API
+## Como Executar e Testar a API
 
 A aplicação foi construída para oferecer uma experiência de desenvolvimento simples e direta. A documentação interativa
 dos endpoints é gerada automaticamente pelo **Swagger**.
@@ -88,7 +88,7 @@ dotnet ef database update --startup-project ../ControleFermentacao.API
 ```
 
 4. Execute o projeto `ControleFermentacao.API`.
-5. O navegador abrirá automaticamente na interface do **Swagger** (ex: `https://localhost:7001/swagger`), onde você
+5. O navegador abrirá automaticamente na interface do **Swagger** (ex: `https://localhost:5106/swagger`), onde você
    poderá testar o endpoint `POST /api/fermentation/records` enviando o payload JSON diretamente pela interface gráfica.
 
 ---

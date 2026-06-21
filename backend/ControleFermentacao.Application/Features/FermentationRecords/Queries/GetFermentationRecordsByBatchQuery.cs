@@ -1,6 +1,13 @@
-﻿namespace ControleFermentacao.Application.Features.FermentationRecords.Queries;
+﻿using MediatR;
 
-public class GetFermentationRecordsByBatchQuery
+namespace ControleFermentacao.Application.Features.FermentationRecords.Queries;
+
+public class GetFermentationRecordsByBatchQuery : IRequest<IEnumerable<FermentationRecordDto>>
 {
-    
+    public string BatchNumber { get; set; }
+
+    public GetFermentationRecordsByBatchQuery(string batchNumber)
+    {
+        BatchNumber = batchNumber;
+    }
 }

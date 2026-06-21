@@ -1,6 +1,8 @@
-﻿namespace ControleFermentacao.Application.Features.FermentationRecords.Queries;
+﻿using ControleFermentacao.Domain.Enums;
+using MediatR;
 
-public class GetFermentationSummaryQuery
+namespace ControleFermentacao.Application.Features.FermentationRecords.Queries;
+
+public class GetFermentationSummaryQuery : IRequest<FermentationSummaryDto>
 {
-    
 }
