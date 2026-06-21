@@ -1,10 +1,12 @@
-// Enum espelhando o FermentationStatus do backend.
-// Usar enum em vez de union literal permite autocompletar e evita erros de digitação.
-export enum FermentationStatus {
-    WithinPattern = 'WithinPattern',
-    Attention = 'Attention',
-    OutOfPattern = 'OutOfPattern',
-}
+// Padrão "const object + type alias" — equivalente ao enum mas compatível com erasableSyntaxOnly.
+// O objeto existe em runtime (para uso em StatusBadge); o type alias serve para anotações de tipo.
+export const FermentationStatus = {
+    WithinPattern: 'WithinPattern',
+    Attention: 'Attention',
+    OutOfPattern: 'OutOfPattern',
+} as const;
+
+export type FermentationStatus = typeof FermentationStatus[keyof typeof FermentationStatus];
 
 export interface Beer {
     id: string;

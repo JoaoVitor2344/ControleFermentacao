@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { LineChart, Line, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { getRecordsByBatch } from '../../api/fermentation';
-import { FermentationRecord } from '../../types';
+import type { FermentationRecord } from '../../types';
 import Button from '../../components/Button';
 import Input from '../../components/Input';
 import StatusBadge from '../../components/StatusBadge';
@@ -86,7 +86,7 @@ export default function BatchHistory() {
                                 <YAxis tick={{ fontSize: 12 }} />
                                 <Tooltip
                                     // Formata os valores do tooltip com vírgula (pt-BR)
-                                    formatter={(value: number) => formatDecimal(value)}
+                                    formatter={(value) => typeof value === 'number' ? formatDecimal(value) : String(value ?? '')}
                                 />
                                 <Legend />
                                 <Line type="monotone" dataKey="Temperatura" stroke="#063852" strokeWidth={2} dot={{ r: 4 }} />

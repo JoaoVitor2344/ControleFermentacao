@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getBeers, deleteBeer } from '../../api/beers';
-import { Beer } from '../../types';
+import type { Beer } from '../../types';
 import Button from '../../components/Button';
 import { formatDecimal } from '../../utils/format';
 

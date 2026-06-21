@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Tank } from '../../types';
+import type { Tank } from '../../types';
 import Button from '../../components/Button';
 import { deleteTank, getTanks } from '../../api/api.ts';
 import { formatDecimal } from '../../utils/format';
