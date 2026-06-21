@@ -34,8 +34,17 @@ public class RegisterFermentationCommandHandler : IRequestHandler<RegisterFermen
             throw new Exception("O tanque informado não está disponível.");
         }
 
-        // Ao instanciar o FermentationRecord, o cálculo é rodado automaticamente
-        // pois o status é definido no construtor na entidade
+        // Converte o momento atual para o fuso horário de Brasília (UTC-3).
+        // Suporta Windows ("E. South America Standard Time") e Linux ("America/Sao_Paulo").
+        var brazilZone = TimeZoneInfo.FindSystemTimeZoneById(
+            OperatingSystem.IsWindows()
+                ? "E. South America Standard Time"
+                : "America/Sao_Paulo"
+        );
+        var brazilNow = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, brazilZone);
+
+        // Ao instanciar o FermentationRecord, o cálculo de status é executado
+        // automaticamente no construtor da entidade
         var record = new FermentationRecord(
             request.BeerId,
             request.TankId,
@@ -44,7 +53,7 @@ public class RegisterFermentationCommandHandler : IRequestHandler<RegisterFermen
             request.Ph,
             request.Extract,
             request.Notes,
-            DateTime.UtcNow,
+            brazilNow,
             beer
         );
 

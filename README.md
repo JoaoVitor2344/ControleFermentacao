@@ -158,6 +158,20 @@ dos endpoints é gerada automaticamente pelo **Swagger**.
 
 ---
 
+## Soft Delete (Exclusão Lógica)
+
+Cervejas e Tanques **nunca são removidos fisicamente** do banco de dados. Ao acionar a exclusão, o campo `DeletedAt` da entidade é preenchido com o timestamp da operação — o registro permanece na tabela, mas fica invisível para as consultas padrão.
+
+**Como funciona internamente:**
+- O `AppDbContext` registra um **filtro global de query** (`HasQueryFilter`) para as entidades `Beer` e `Tank`, excluindo automaticamente qualquer registro onde `DeletedAt != null`.
+- Esse filtro é transparente: nenhuma query precisa saber da sua existência para funcionar corretamente.
+- Para consultar os registros removidos, use o parâmetro `?includeDeleted=true` nas rotas `GET /api/beers` e `GET /api/tanks`. O handler chama `.IgnoreQueryFilters()` no EF Core para desativar o filtro naquela requisição específica.
+
+**Por que soft delete?**
+Dados fermentativos têm implicações regulatórias (MAPA). Excluir fisicamente um tanque ou cerveja que possui histórico de apontamentos poderia comprometer a rastreabilidade do processo. O soft delete preserva o histórico e ainda impede novas operações sobre o registro removido.
+
+---
+
 ## Regras de Negócio e Premissas Adotadas
 
 ### Classificação Dinâmica do Status Fermentativo (`FermentationStatus`)

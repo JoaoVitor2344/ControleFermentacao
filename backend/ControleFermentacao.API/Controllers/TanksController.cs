@@ -1,6 +1,5 @@
-﻿using ControleFermentacao.Application.Features.Tanks.Commands;
+using ControleFermentacao.Application.Features.Tanks.Commands;
 using ControleFermentacao.Application.Features.Tanks.Queries;
-using ControleFermentacao.Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -20,81 +19,48 @@ public class TanksController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Post([FromBody] CreateTankCommand command)
     {
-        try
-        {
-            var tankId = await _mediator.Send(command);
-            return Ok(new { Message = "Tanque cadastrado com sucesso!", TankId = tankId });
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(new { Error = ex.Message });
-        }
+        var tankId = await _mediator.Send(command);
+        return Ok(new { Message = "Tanque cadastrado com sucesso!", TankId = tankId });
     }
 
+    // includeDeleted: parâmetro opcional de query string para exibir tanques removidos
+    // Exemplo: GET /api/tanks?includeDeleted=true
     [HttpGet]
-    public async Task<IActionResult> GetAll()
+    public async Task<IActionResult> GetAll([FromQuery] bool includeDeleted = false)
     {
-        try
-        {
-            var tanks = await _mediator.Send(new GetAllTanksQuery());
-            return Ok(tanks);
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(new { Error = ex.Message });
-        }
+        var tanks = await _mediator.Send(new GetAllTanksQuery { IncludeDeleted = includeDeleted });
+        return Ok(tanks);
     }
 
     [HttpGet("{id}")]
     public async Task<IActionResult> GetById(Guid id)
     {
-        try
-        {
-            var tank = await _mediator.Send(new GetTankByIdQuery(id));
+        var tank = await _mediator.Send(new GetTankByIdQuery(id));
 
-            if (tank == null)
-                return NotFound(new { Message = "Tanque não encontrado." });
+        if (tank == null)
+            return NotFound(new { Message = "Tanque não encontrado." });
 
-            return Ok(tank);
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(new { Error = ex.Message });
-        }
+        return Ok(tank);
     }
 
     [HttpPut("{id}")]
     public async Task<IActionResult> Update(Guid id, [FromBody] UpdateTankCommand command)
     {
-        try
-        {
-            if (id != command.Id)
-                return BadRequest(new { Message = "O ID da rota não bate com o ID do corpo da requisição" });
+        if (id != command.Id)
+            return BadRequest(new { Message = "O ID da rota não bate com o ID do corpo da requisição" });
 
-            var success = await _mediator.Send(command);
-            if (!success) return NotFound(new { Message = "Tanque não encontrado para edição." });
+        var success = await _mediator.Send(command);
+        if (!success) return NotFound(new { Message = "Tanque não encontrado para edição." });
 
-            return NoContent();
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(new { Error = ex.Message });
-        }
+        return NoContent();
     }
 
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(Guid id)
     {
-        try
-        {
-            var success = await _mediator.Send(new DeleteTankCommand(id));
-            if (!success) return NotFound(new { Message = "Tanque não encontrado para exclusão" });
+        var success = await _mediator.Send(new DeleteTankCommand(id));
+        if (!success) return NotFound(new { Message = "Tanque não encontrado para exclusão" });
 
-            return NoContent();
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(new { Error = ex.Message });
-        }
+        return NoContent();
     }
 }

@@ -1,3 +1,4 @@
+using ControleFermentacao.API.Middlewares;
 using ControleFermentacao.Application;
 using ControleFermentacao.Infrastructure;
 
@@ -12,11 +13,16 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// Lê a URL do frontend do appsettings.json em vez de manter hardcoded no código.
+// Em produção, sobrescrever via variável de ambiente: AllowedOrigins=https://app.exemplo.com
+var allowedOrigins = builder.Configuration["AllowedOrigins"]
+    ?? throw new InvalidOperationException("Configuração 'AllowedOrigins' não encontrada.");
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("FrontendPolicy", policy =>
     {
-        policy.WithOrigins("http://localhost:5173")
+        policy.WithOrigins(allowedOrigins)
             .AllowAnyHeader()
             .AllowAnyMethod();
     });
@@ -24,13 +30,15 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    // app.MapOpenApi();
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+// O middleware de exceções deve ser o primeiro da pipeline para capturar
+// erros de qualquer etapa posterior (CORS, autorização, controllers)
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 app.UseHttpsRedirection();
 app.UseAuthorization();

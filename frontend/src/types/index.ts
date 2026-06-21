@@ -1,3 +1,11 @@
+// Enum espelhando o FermentationStatus do backend.
+// Usar enum em vez de union literal permite autocompletar e evita erros de digitação.
+export enum FermentationStatus {
+    WithinPattern = 'WithinPattern',
+    Attention = 'Attention',
+    OutOfPattern = 'OutOfPattern',
+}
+
 export interface Beer {
     id: string;
     name: string;
@@ -8,12 +16,14 @@ export interface Beer {
     maxPh: number;
     minExtract: number;
     maxExtract: number;
+    deletedAt?: string | null; // preenchido quando includeDeleted=true
 }
 
 export interface Tank {
     id: string;
     name: string;
     capacityLiters: number;
+    deletedAt?: string | null; // preenchido quando includeDeleted=true
 }
 
 export interface FermentationRecord {
@@ -23,7 +33,7 @@ export interface FermentationRecord {
     extract: number;
     notes: string;
     recordedAt: string;
-    status: 'WithinPattern' | 'Attention' | 'OutOfPattern';
+    status: FermentationStatus;
 }
 
 export interface FermentationSummary {

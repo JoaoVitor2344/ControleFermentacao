@@ -1,4 +1,4 @@
-﻿using ControleFermentacao.Domain.Entities;
+using ControleFermentacao.Domain.Entities;
 using ControleFermentacao.Domain.Interfaces;
 using MediatR;
 
@@ -15,6 +15,7 @@ public class GetAllTanksQueryHandler : IRequestHandler<GetAllTanksQuery, IEnumer
 
     public async Task<IEnumerable<Tank>> Handle(GetAllTanksQuery request, CancellationToken cancellationToken)
     {
-        return await _tankRepository.GetAllAsync();
+        // Repassa o parâmetro para o repositório, que decide se ignora o filtro de soft delete
+        return await _tankRepository.GetAllAsync(request.IncludeDeleted);
     }
 }

@@ -25,9 +25,15 @@ public class BeerRepository : IBeerRepository
         await _context.SaveChangesAsync();
     }
 
-    public async Task<IEnumerable<Beer>> GetAllAsync()
+    public async Task<IEnumerable<Beer>> GetAllAsync(bool includeDeleted = false)
     {
-        return await _context.Beers.ToListAsync();
+        // IgnoreQueryFilters() desativa o filtro global de soft delete do DbContext,
+        // retornando todos os registros incluindo os logicamente excluídos
+        var query = includeDeleted
+            ? _context.Beers.IgnoreQueryFilters()
+            : _context.Beers.AsQueryable();
+
+        return await query.ToListAsync();
     }
 
     public async Task UpdateAsync(Beer beer)

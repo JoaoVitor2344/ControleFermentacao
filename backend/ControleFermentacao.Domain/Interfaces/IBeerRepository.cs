@@ -6,7 +6,8 @@ public interface IBeerRepository
 {
     Task<Beer?> GetByIdAsync(Guid id);
     Task AddAsync(Beer beer);
-    Task<IEnumerable<Beer>> GetAllAsync();
+    // includeDeleted: quando true, retorna também registros com soft delete aplicado
+    Task<IEnumerable<Beer>> GetAllAsync(bool includeDeleted = false);
     Task UpdateAsync(Beer beer);
     Task DeleteAsync(Guid id);
 }

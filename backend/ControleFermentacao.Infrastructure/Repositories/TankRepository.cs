@@ -25,9 +25,15 @@ public class TankRepository : ITankRepository
         await _context.SaveChangesAsync();
     }
 
-    public async Task<IEnumerable<Tank>> GetAllAsync()
+    public async Task<IEnumerable<Tank>> GetAllAsync(bool includeDeleted = false)
     {
-        return await _context.Tanks.ToListAsync();
+        // IgnoreQueryFilters() desativa o filtro global de soft delete do DbContext,
+        // retornando todos os registros incluindo os logicamente excluídos
+        var query = includeDeleted
+            ? _context.Tanks.IgnoreQueryFilters()
+            : _context.Tanks.AsQueryable();
+
+        return await query.ToListAsync();
     }
 
     public async Task UpdateAsync(Tank tank)

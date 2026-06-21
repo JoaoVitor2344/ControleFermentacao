@@ -1,0 +1,10 @@
+# .NET build artifacts
+bin/
+obj/
+
+# JetBrains IDE
+.idea/
+
+# Variáveis de ambiente
+.env
+.env.local
