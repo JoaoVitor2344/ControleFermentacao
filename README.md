@@ -1,261 +1,130 @@
 # ControleFermentacaoCervejeira
 
-Este projeto foi desenvolvido como parte do processo seletivo da **ArBrain** para a avaliação de competências técnicas em Engenharia de Software. A aplicação tem como objetivo monitorar dados fermentativos, garantindo o controle de qualidade e a conformidade com as normas do MAPA (Ministério da Agricultura e Pecuária).
+Este é o repositório do **ControleFermentacaoCervejeira**, projeto desenvolvido para o desafio técnico da **ArBrain**. A ideia central é fornecer um sistema robusto para monitorar as etapas de fermentação de lotes de cerveja, garantindo o padrão de qualidade e facilitando o cumprimento das exigências regulatórias do MAPA.
 
 ---
 
 ## Arquitetura do Sistema
 
-A solução foi desenhada seguindo os princípios da **Clean Architecture (Arquitetura Limpa)**, combinada ao padrão **CQRS (Command Query Responsibility Segregation)** implementado com a biblioteca **MediatR**.
-
-A organização do projeto adota a estratégia de **Monorepo**, isolando o ecossistema do backend e do frontend sob uma mesma estrutura de versionamento.
+Estruturei a aplicação usando **Clean Architecture** e **CQRS** (via MediatR). Essa combinação separa claramente a regra de negócio da infraestrutura e divide as rotas de leitura e escrita, facilitando manutenções e escala futura. Optei por um formato de **Monorepo**, mantendo backend e frontend no mesmo lugar para simplificar a execução e a avaliação do projeto.
 
 ### Divisão em Camadas (Backend)
 
-1. **ControleFermentacaoCervejeira.Domain:** Totalmente isolado e agnóstico a frameworks, bancos de dados ou APIs. Contém as entidades ricas do sistema (`Beer`, `Tank`, `FermentationRecord`), os Enums e as regras de negócio puras.
-2. **ControleFermentacaoCervejeira.Application:** Depende apenas do Domínio. Implementa o padrão CQRS estruturado por *Features* (funcionalidades). Contém os *Commands*, *Queries*, seus respectivos *Handlers* e DTOs (Data Transfer Objects).
-3. **ControleFermentacaoCervejeira.Infrastructure:** Depende da Application e do Domínio. Contém a infraestrutura de acesso a dados usando o Entity Framework Core, mapeamentos Fluent API, migrações e implementações de repositórios.
-4. **ControleFermentacaoCervejeira.API:** Depende da Application e da Infrastructure. É a camada de apresentação HTTP, responsável apenas por receber requisições, delegar ao MediatR e retornar as respostas com os devidos códigos de status HTTP.
+No backend, os projetos estão divididos assim:
+- **Domain:** O coração da aplicação. Não conhece banco de dados nem API, apenas concentra as regras de negócio puras e entidades (`Beer`, `Tank`, `FermentationRecord`).
+- **Application:** Onde o CQRS ganha vida. Separada por *Features*, contém nossos *Commands*, *Queries* e *Handlers*. Só enxerga o domínio.
+- **Infrastructure:** A camada que lida com o banco de dados. É aqui que moram o EF Core, os mapeamentos Fluent API e os repositórios.
+- **API:** Nossa porta de entrada HTTP. Só recebe as chamadas, joga para o MediatR processar e devolve o status HTTP correto (limpa e sem lógica de negócio nos controllers).
 
 ---
 
-## Estrutura de Pastas do Repositório
+## Visão Geral das Pastas
 
 ```text
 ├── backend\                                    
-│   ├── ControleFermentacaoCervejeira.sln                 <-- Arquivo da Solution
+│   ├── ControleFermentacaoCervejeira.sln                 
 │   │
-│   ├── ControleFermentacaoCervejeira.API\                <-- Projeto Web API (.NET 10.0)
-│   │   ├── Controllers\                        (BeersController, TanksController, FermentationController)
-│   │   ├── Properties\                         (launchSettings.json)
-│   │   ├── appsettings.json
-│   │   └── Program.cs
-│   │
-│   ├── ControleFermentacaoCervejeira.Domain\             <-- Class Library (Regras de negócio puras)
-│   │   ├── Entities\                           (Beer.cs, Tank.cs, FermentationRecord.cs)
-│   │   ├── Enums\                              (FermentationStatus.cs)
-│   │   └── Interfaces\                         (IBeerRepository, ITankRepository, IFermentationRecordRepository)
-│   │
-│   ├── ControleFermentacaoCervejeira.Application\        <-- Class Library (CQRS com MediatR)
-│   │   ├── Features\                           (Organização por Funcionalidade)
-│   │   │   ├── Beers\                          (Commands e Queries de Cervejas)
-│   │   │   ├── Tanks\                          (Commands e Queries de Tanques)
-│   │   │   └── FermentationRecords\            (Commands, Queries e DTOs de Apontamentos)
-│   │   └── DependencyInjection.cs              (Registro do MediatR no container de DI)
-│   │
-│   └── ControleFermentacaoCervejeira.Infrastructure\     <-- Class Library (Persistência / EF Core)
-│       ├── Data\
-│       │   ├── Context\                        (AppDbContext.cs)
-│       │   ├── Mappings\                       (Configurações Fluent API)
-│       │   └── Migrations\                     (Migrações geradas automaticamente)
-│       ├── Repositories\                       (Implementações reais de acesso a dados)
-│       └── DependencyInjection.cs              (Registro do DbContext e Repositórios no container de DI)
+│   ├── ControleFermentacaoCervejeira.API\                <-- Web API (.NET 10.0)
+│   ├── ControleFermentacaoCervejeira.Domain\             <-- Entidades e Regras de Negócio
+│   ├── ControleFermentacaoCervejeira.Application\        <-- CQRS (Comandos e Casos de Uso)
+│   └── ControleFermentacaoCervejeira.Infrastructure\     <-- Banco de Dados (EF Core)
 │
 ├── frontend\                                   <-- Aplicação React + TypeScript (Vite)
-│   ├── public\                                 (Arquivos estáticos públicos)
+│   ├── public\                                 
 │   ├── src\
-│   │   ├── api\
-│   │   │   ├── client.ts                       (Instância base do Axios com a URL da API)
-│   │   │   ├── beers.ts                        (Chamadas HTTP de Cervejas)
-│   │   │   ├── api.ts                          (Chamadas HTTP de Tanques)
-│   │   │   └── fermentation.ts                 (Chamadas HTTP de Fermentação)
-│   │   ├── components\                         (Button, Input, Select, StatusBadge)
-│   │   ├── layouts\
-│   │   │   └── MainLayout.tsx                  (Sidebar + Header compartilhados entre todas as páginas)
-│   │   ├── pages\
-│   │   │   ├── Dashboard\                      (Cards de resumo dos apontamentos)
-│   │   │   ├── Beers\                          (Listagem e formulário de Cervejas)
-│   │   │   ├── Tanks\                          (Listagem e formulário de Tanques)
-│   │   │   └── Fermentation\                   (Registro de apontamento e Histórico de Lotes)
-│   │   ├── types\
-│   │   │   └── index.ts                        (Interfaces TypeScript espelhando os contratos do backend)
-│   │   ├── App.tsx                             (Configuração de rotas com React Router)
-│   │   └── index.css                           (Tokens do design system ArBrain via Tailwind @theme)
+│   │   ├── api\                                <-- Camada isolada para requisições HTTP (Axios)
+│   │   ├── components\                         <-- UI reutilizável
+│   │   ├── layouts\                            <-- Sidebar e Header
+│   │   ├── pages\                              <-- Telas (Dashboard, Fermentation, Beers, Tanks)
+│   │   ├── types\                              <-- Contratos TypeScript do back
+│   │   ├── App.tsx                             
+│   │   └── index.css                           <-- Tokens e design via Tailwind CSS
 │   ├── index.html
 │   ├── package.json
-│   ├── vite.config.ts
-│   └── .env.example
+│   └── vite.config.ts
 │
 └── README.md                                  
-
 ```
 
 ---
 
 ## Como Executar o Backend
 
-A aplicação foi construída para oferecer uma experiência de desenvolvimento simples e direta. A documentação interativa dos endpoints é gerada automaticamente pelo **Swagger**.
+A ideia é que seja simples rodar o projeto na sua máquina. O Swagger já está configurado para documentar e testar os endpoints.
 
-### Pré-requisitos
-
-* [.NET 10 SDK](https://dotnet.microsoft.com/download)
-* [PostgreSQL](https://www.postgresql.org/download/) (Local ou via Docker)
-* IDE de sua preferência (Rider, Visual Studio, VS Code)
-
-### Passos para Execução
+**Pré-requisitos:** .NET 10 SDK e um banco PostgreSQL (local ou Docker).
 
 1. Clone o repositório.
-2. Na raiz do projeto `ControleFermentacaoCervejeira.API`, configure a *Connection String* do PostgreSQL no arquivo `appsettings.json`. Se preferir, você pode subir apenas o banco de dados via Docker executando `docker-compose up -d` na raiz do repositório.
-```json
-"ConnectionStrings": {
-  "DefaultConnection": "Host=localhost;Port=5432;Database=ControleFermentacaoCervejeiraDb;Username=postgres;Password=postgres"
-}
-
-```
-
-
-3. Abra um terminal na pasta `ControleFermentacaoCervejeira.Infrastructure` e rode as migrações para criar o banco de dados:
+2. No projeto `ControleFermentacaoCervejeira.API`, abra o `appsettings.json` e ajuste a string de conexão. Se preferir, é só rodar `docker-compose up -d` na raiz para subir um banco rápido.
+3. Abra um terminal na pasta `ControleFermentacaoCervejeira.Infrastructure` e rode as migrations para criar as tabelas:
 ```bash
 dotnet ef database update --startup-project ../ControleFermentacaoCervejeira.API
-
 ```
-
-
-4. Execute o projeto `ControleFermentacaoCervejeira.API`.
-5. O navegador abrirá automaticamente na interface do **Swagger** (`http://localhost:5106/swagger`), onde você poderá testar todos os endpoints disponíveis.
+4. Rode o projeto `ControleFermentacaoCervejeira.API`.
+5. Pronto! O navegador vai abrir sozinho no Swagger (`http://localhost:5106/swagger`) para você testar as rotas.
 
 ---
 
 ## Como Executar o Frontend
 
-### Pré-requisitos
+**Pré-requisitos:** Node.js 18+.
 
-* [Node.js 18+](https://nodejs.org/)
-
-### Passos para Execução
-
-1. Acesse a pasta do frontend:
-```bash
-cd frontend
-
-```
-
-
-2. Instale as dependências:
-```bash
-npm install
-
-```
-
-
-3. Copie o arquivo de variáveis de ambiente e configure a URL da API:
+1. Entre na pasta `frontend`.
+2. Instale as dependências: `npm install`.
+3. Crie seu `.env` copiando o nosso arquivo de exemplo:
 ```bash
 cp .env.example .env
-
 ```
+*(A base URL padrão que vem no arquivo é `http://localhost:5106/api`)*.
+4. Inicie o servidor: `npm run dev`.
+5. Acesse `http://localhost:5173`.
 
-
-O arquivo `.env` deve conter:
-```env
-VITE_API_BASE_URL=http://localhost:5106/api
-
-```
-
-
-4. Inicie o servidor de desenvolvimento:
-```bash
-npm run dev
-
-```
-
-
-5. Acesse `http://localhost:5173` no navegador.
-
-> **Importante:** O backend deve estar em execução antes de iniciar o frontend.
+> **Dica:** Lembre-se de deixar o backend rodando antes de começar a usar o front!
 
 ---
 
 ## Soft Delete (Exclusão Lógica)
 
-Cervejas e Tanques **nunca são removidos fisicamente** do banco de dados. Ao acionar a exclusão, o campo `DeletedAt` da entidade é preenchido com o timestamp da operação — o registro permanece na tabela, mas fica invisível para as consultas padrão.
+Para garantir a rastreabilidade exigida por órgãos como o MAPA, cervejas e tanques **nunca são deletados de verdade** (hard delete). Quando você exclui um tanque, o sistema apenas preenche o campo `DeletedAt`.
 
-**Como funciona internamente:**
-
-* O `AppDbContext` registra um **filtro global de query** (`HasQueryFilter`) para as entidades `Beer` e `Tank`, excluindo automaticamente qualquer registro onde `DeletedAt != null`.
-* Esse filtro é transparente: nenhuma query precisa saber da sua existência para funcionar corretamente.
-* Para consultar os registros removidos, use o parâmetro `?includeDeleted=true` nas rotas `GET /api/beers` e `GET /api/tanks`. O handler chama `.IgnoreQueryFilters()` no EF Core para desativar o filtro naquela requisição específica.
-
-**Por que soft delete?**
-Dados fermentativos têm implicações regulatórias (MAPA). Excluir fisicamente um tanque ou cerveja que possui histórico de apontamentos poderia comprometer a rastreabilidade do processo. O soft delete preserva o histórico e ainda impede novas operações sobre o registro removido.
+Configurei um filtro global (`HasQueryFilter`) no EF Core para que esses registros inativos sumam automaticamente de todas as consultas normais, de forma transparente. Se precisar consultar o que foi apagado, é só passar `?includeDeleted=true` nas rotas de `GET` que o repositório desativa temporariamente esse filtro usando `.IgnoreQueryFilters()`.
 
 ---
 
-## Regras de Negócio e Premissas Adotadas
+## Regras de Negócio e o Algoritmo de Status
 
-### Classificação Dinâmica do Status Fermentativo (`FermentationStatus`)
+Um dos pontos principais do desafio era classificar um apontamento como **Dentro do Padrão**, **Atenção** ou **Fora do Padrão**.
 
-O desafio técnico exige a classificação automática dos apontamentos de medição (Temperatura, pH e Extrato) em três categorias: **Dentro do Padrão**, **Atenção** e **Fora do Padrão**.
+Em vez de chumbar valores fixos no código que só funcionariam para um estilo de cerveja específico, criei um algoritmo matemático e dinâmico inspirado em **Cartas de Controle Estatístico de Processo (SPC)** da indústria.
 
-Para garantir uma aplicação escalável, genérica e capaz de suportar qualquer estilo de cerveja sem a necessidade de valores fixos no código, foi adotada uma premissa algorítmica inspirada no comportamento de **Cartas de Controle Estatístico de Processo (SPC)**.
+Funciona assim: a própria entidade calcula uma margem de risco equivalente a **10% da amplitude total** (a diferença entre o limite máximo e mínimo que o usuário cadastrou) para a temperatura, o pH ou o extrato.
+Se a medição cair nesses 10% próximos às bordas, o sistema entra em estado de **Atenção**. Se estourar os limites de vez, é **Fora do Padrão**.
 
-O status **Atenção (Attention)** é acionado sempre que o valor medido estiver dentro dos limites aceitáveis cadastrados para a cerveja, mas adentrar uma zona de risco correspondente a **10% das extremidades da amplitude total** daquele parâmetro específico.
-
-#### O Algoritmo Matemático
-
-Para qualquer parâmetro monitorado, a entidade `FermentationRecord` calcula o status de forma determinística no momento da sua criação seguindo os passos:
-
-1. **Cálculo da Amplitude (R):**
-R = Limite Máximo - Limite Mínimo
-2. **Cálculo da Margem de Segurança (M):**
-M = R * 0.10
-3. **Zonas de Classificação:**
-* **Fora do Padrão (`OutOfPattern`):** Valor < Limite Mínimo OU Valor > Limite Máximo
-* **Atenção (`Attention`):** O Valor entra no limite de M somado ao Limite Mínimo OU subtraído do Limite Máximo.
-* **Dentro do Padrão (`WithinPattern`):** Valores que não se enquadram nas regras anteriores.
-
-
-
-#### Embasamento Técnico e Referências
-
-A escolha de uma margem estreita e dinâmica baseada na amplitude para disparar o status de alerta simula os limites biológicos e químicos reais encontrados em cervejarias comerciais:
-
-1. **Estresse Térmico e Geração de *Off-Flavors*:** O controle rígido da temperatura é o pilar mais crítico da fermentação. ([Esters and Fusel Alcohols - Scott Janish](https://scottjanish.com/esters-and-fusel-alcohols/))
-2. **Monitoramento Químico e Sanidade do Lote (pH):** O pH ao longo da fermentação saudável segue uma linha extremamente tênue. ([The Role of pH in Brewing - BYO Journal](https://byo.com/articles/the-role-of-ph-in-brewing/))
-3. **Cartas de Controle Industrial (SPC):** O modelo algorítmico mimetiza os softwares de automação de salas de controle, que disparam alarmes preventivos quando uma variável física se aproxima das bordas estatísticas de controle. ([Monitoring Saccharification Process - ResearchGate](https://www.researchgate.net/publication/305741109_Monitoring_Saccharification_Process_in_Brewery_Industry_Using_Quality_Control_Charts))
+Me baseei em necessidades reais de chão de fábrica para isso:
+- O controle milimétrico de temperatura é crítico para evitar *off-flavors*.
+- O pH de uma fermentação saudável segue uma curva bem apertada.
+- O uso da margem de 10% mimetiza sistemas de automação caros, que disparam alarmes preventivos antes que um lote seja perdido.
 
 ---
 
 ## Respostas do Desafio Técnico
 
 ### 1. Como você modelou a solução?
+**Backend:** Segui pelo caminho da Clean Architecture + CQRS. Isolar o domínio me garantiu que nenhuma regra de negócio fosse misturada com a infraestrutura (banco de dados). O CQRS foi escolhido já pensando num cenário de escala onde o Dashboard passe a sofrer muitas consultas simultâneas; separar a escrita da leitura facilita otimizações futuras. E para fechar, usei Fluent API com `DeleteBehavior.Restrict` para blindar o banco e não deixar ninguém excluir acidentalmente um tanque que já tenha cerveja fermentando dentro.
 
-**Backend:**
-A solução backend foi estruturada com **Clean Architecture** e o padrão **CQRS** com **MediatR**.
-
-* A Clean Architecture garante o isolamento absoluto da regra de negócio cervejeira. O Domínio é protegido contra vazamentos de escopo de infraestrutura.
-* O CQRS separa fluxos de escrita (Commands) de fluxos de leitura (Queries). Essa decisão prepara o software para cenários futuros onde as consultas e agregações de dados do Dashboard exijam otimizações de banco de dados ou caches (como Redis) sem impactar a performance do registro de apontamentos.
-* A escolha do **Monorepo** unifica o ciclo de vida do backend e do frontend, simplificando pipelines e facilitando a avaliação do código.
-* Optei por mapeamento via *Fluent API* no Entity Framework para não poluir as entidades com *Data Annotations*, mantendo o domínio puro. Configurei políticas estritas de chave estrangeira (`DeleteBehavior.Restrict`) para impedir a exclusão acidental de Tanques ou Cervejas em uso.
-
-**Frontend:**
-A interface foi construída com **React + TypeScript** via **Vite**, seguindo a separação de responsabilidades:
-
-* `api/` — Funções de acesso HTTP (Axios) isoladas por domínio.
-* `types/` — Interfaces TypeScript que espelham os contratos do backend.
-* `components/` — Componentes reutilizáveis sem lógica de negócio para garantir consistência visual.
-* `pages/` e `layouts/` — Estruturas visuais com roteamento via React Router.
+**Frontend:** Fiz em React com TypeScript usando o Vite. Dividi as responsabilidades claramente: a pasta `api/` faz as chamadas HTTP (isoladas por domínio), a pasta `types/` reflete os contratos exatos do backend, e a `components/` concentra toda a UI reaproveitável.
 
 ### 2. Premissas adotadas: Quais decisões precisou tomar por conta própria?
-
-A principal premissa adotada foi a criação de um **algoritmo matemático para o cálculo automático do status de "Atenção"**, baseado em Cartas de Controle Estatístico (SPC), utilizando uma margem dinâmica de tolerância correspondente a 10% da amplitude de cada parâmetro (Temperatura, pH e Extrato).
-
-Além disso, adotei como premissa a obrigatoriedade da **Exclusão Lógica (Soft Delete)** para Cervejas e Tanques a fim de preservar o histórico exigido por órgãos regulatórios (MAPA). Também decidi que a **data e hora do apontamento (`RecordedAt`) devem ser definidas exclusivamente no servidor**, garantindo consistência independente do fuso horário ou do relógio do dispositivo do operador no chão de fábrica.
+A principal premissa foi a modelagem da margem dinâmica de 10% (estatística) para calcular o status, em vez de exigir que o operador cadastrasse manualmente limites de "alerta" para cada cerveja. 
+Também decidi implementar o **Soft Delete** obrigatório para proteger o histórico contra exclusões acidentais, algo crucial na indústria alimentícia. Por fim, fiz questão de que a data e hora do apontamento (`RecordedAt`) seja **sempre** carimbada pelo backend; isso evita bizarrices se o tablet do operador estiver com o fuso horário ou a hora desajustados.
 
 ### 3. O que faria diferente e quais melhorias implementaria se tivesse mais tempo?
-
-Algumas melhorias de "overdelivery" já foram implementadas durante o desenvolvimento atual (Gráfico visual da evolução do lote com Recharts, Filtro global de Soft Delete, e Endpoint que retorna os lotes disponíveis para o `<Select>` do frontend).
-
-As melhorias que ficariam para uma próxima iteração de produção incluem:
-
-* **Containerização Completa:** Criação de múltiplos estágios no `Dockerfile` para a API .NET e o frontend React, permitindo subir toda a aplicação e o banco com um único comando `docker-compose up`.
-* **Pipeline de Testes Automatizados:** Implementação de uma suíte de testes unitários usando *xUnit*, *FluentAssertions* e *Moq*, focando em 100% de cobertura da matriz de decisão matemática da entidade `FermentationRecord`. No frontend, testes de componente com *Vitest* e *Testing Library*.
-* **Autenticação e Autorização:** Integração do ASP.NET Core Identity com proteção via Tokens JWT e políticas RBAC (Role-Based Access Control) diferenciando acessos entre Operadores de Linha e Mestres Cervejeiros.
-* **Exportação de Relatórios:** Geração de relatórios PDF ou CSV do histórico de um Lote específico, facilitando auditorias governamentais (MAPA).
+Alguns overdeliveries eu já adiantei no código atual (como o gráfico de evolução do lote integrado com Recharts e o select dinâmico). Mas, para o projeto rodar redondo em ambiente de produção na V2, eu atacaria:
+- **Testes Automatizados:** Usar xUnit e FluentAssertions para bater 100% de cobertura naquele algoritmo de cálculo de status (a entidade de apontamento). E testes de componente no front com Vitest.
+- **Docker Completo:** Fazer o build da API .NET e do React direto num `docker-compose` para subir todo o ecossistema com um comando só, não apenas o banco.
+- **Autenticação (Identity):** Restringir o acesso com JWT. O operador anota os dados; apenas o Mestre Cervejeiro cadastra novos estilos e altera capacidades de tanque.
+- **Relatórios Exportáveis:** Uma rota que cospe o PDF de um lote específico para ser entregue nas auditorias frequentes do MAPA.
 
 ### 4. O uso de ferramentas de IA é permitido e incentivado. Caso utilize, descreva:
-
-O backend foi desenvolvido com auxílio do **Gemini (Google)** e o frontend com o **Claude Code (Anthropic)**, ambos com abordagem pedagógica: a IA debatia o raciocínio por trás de cada decisão arquitetural e o desenvolvedor guiava, implementava e validava.
-
-* **Quais ferramentas utilizou?** Gemini e Claude Code.
-* **Em quais partes a IA ajudou?** Discussão teórica para validar o modelo biológico e estatístico de tolerância (10% da amplitude); avaliação comparativa entre *Service Pattern* e *CQRS/MediatR*; definição da stack de front-end (Vite, React Hook Form, Tailwind); e estruturação inicial de componentes.
-* **O que precisou corrigir do que a IA gerou?** Foi necessário corrigir integrações reais de CORS entre a API e o React que a IA não previu corretamente, refatorar o lançamento de exceções genéricas (`Exception`) para exceções de domínio customizadas (`NotFoundException`), e ajustar a lógica para o backend definir o `RecordedAt` corretamente via servidor, corrigindo comportamentos anômalos de data sugeridos na montagem do payload do frontend.
+Usei o **Gemini** e o **Claude Code** no estilo *pair-programming*. Eles me ajudaram muito a debater as opções teóricas de arquitetura e a estruturar a base inicial do código. Como nenhuma IA é perfeita, eu precisei atuar ativamente fazendo *code review* e ajustes manuais pesados: 
+Tive que refatorar os problemas de CORS que foram sugeridos incorretamente, arrumar a lógica de data/hora que o gerador tentava montar de forma errada no payload do frontend, e trocar Exceções Genéricas (`Exception`) por Exceções de Domínio Customizadas (`NotFoundException` e `BusinessValidationException`) para tratá-las de forma elegante através de um Middleware global na API.
