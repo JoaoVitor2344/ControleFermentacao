@@ -1,4 +1,5 @@
-﻿using ControleFermentacaoCervejeira.Domain.Entities;
+using ControleFermentacaoCervejeira.Domain.Entities;
+using ControleFermentacaoCervejeira.Domain.Exceptions;
 using ControleFermentacaoCervejeira.Domain.Interfaces;
 using MediatR;
 
@@ -21,18 +22,12 @@ public class RegisterFermentationCommandHandler : IRequestHandler<RegisterFermen
     public async Task<Guid> Handle(RegisterFermentationCommand request, CancellationToken cancellationToken)
     {
         // Busca a cerveja para obter os limites
-        var beer = await _beerRepository.GetByIdAsync(request.BeerId);
-        if (beer == null)
-        {
-            throw new Exception("A cerveja informada não foi encontrada no catálogo.");
-        }
+        var beer = await _beerRepository.GetByIdAsync(request.BeerId)
+            ?? throw new NotFoundException("Cerveja", request.BeerId);
 
         // Valida se o tanque de destino existe
-        var tank = await _tankRepository.GetByIdAsync(request.TankId);
-        if (tank == null)
-        {
-            throw new Exception("O tanque informado não está disponível.");
-        }
+        var tank = await _tankRepository.GetByIdAsync(request.TankId)
+            ?? throw new NotFoundException("Tanque", request.TankId);
 
         // Ao instanciar o FermentationRecord, o cálculo de status é executado
         // automaticamente no construtor da entidade

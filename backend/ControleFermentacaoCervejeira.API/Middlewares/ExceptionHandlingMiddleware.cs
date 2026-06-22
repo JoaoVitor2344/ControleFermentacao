@@ -1,5 +1,6 @@
-﻿using System.Net;
+using System.Net;
 using System.Text.Json;
+using ControleFermentacaoCervejeira.Domain.Exceptions;
 
 namespace ControleFermentacaoCervejeira.API.Middlewares;
 
@@ -36,17 +37,20 @@ public class ExceptionHandlingMiddleware
     {
         context.Response.ContentType = "application/json";
 
-        // Erros de negócio (ArgumentException, InvalidOperation) retornam 400
-        // Qualquer outro erro inesperado retorna 500
-        var statusCode = exception is ArgumentException or InvalidOperationException
-            ? HttpStatusCode.BadRequest
-            : HttpStatusCode.InternalServerError;
+        var (statusCode, errors) = exception switch
+        {
+            NotFoundException => (HttpStatusCode.NotFound, new[] { exception.Message }),
+            BusinessValidationException bve => (HttpStatusCode.BadRequest, bve.Errors.ToArray()),
+            ArgumentException or InvalidOperationException => (HttpStatusCode.BadRequest, new[] { exception.Message }),
+            _ => (HttpStatusCode.InternalServerError, new[] { "Ocorreu um erro interno no servidor." })
+        };
 
         context.Response.StatusCode = (int)statusCode;
 
         var response = new
         {
             Error = exception.Message,
+            Errors = errors,
             StatusCode = (int)statusCode
         };
 

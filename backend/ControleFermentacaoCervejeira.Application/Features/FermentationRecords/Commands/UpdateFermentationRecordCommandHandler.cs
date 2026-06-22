@@ -1,3 +1,4 @@
+using ControleFermentacaoCervejeira.Domain.Exceptions;
 using ControleFermentacaoCervejeira.Domain.Interfaces;
 using MediatR;
 
@@ -18,11 +19,11 @@ public class UpdateFermentationRecordCommandHandler : IRequestHandler<UpdateFerm
 
     public async Task<bool> Handle(UpdateFermentationRecordCommand request, CancellationToken cancellationToken)
     {
-        var record = await _recordRepository.GetByIdAsync(request.Id);
-        if (record == null) return false;
+        var record = await _recordRepository.GetByIdAsync(request.Id)
+            ?? throw new NotFoundException("Registro de fermentação", request.Id);
 
-        var beer = await _beerRepository.GetByIdAsync(record.BeerId);
-        if (beer == null) return false;
+        var beer = await _beerRepository.GetByIdAsync(record.BeerId)
+            ?? throw new NotFoundException("Cerveja", record.BeerId);
 
         record.Update(request.Temperature, request.Ph, request.Extract, request.Notes, beer);
         await _recordRepository.UpdateAsync(record);
