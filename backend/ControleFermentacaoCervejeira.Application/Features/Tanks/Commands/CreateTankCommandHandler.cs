@@ -15,7 +15,7 @@ public class CreateTankCommandHandler : IRequestHandler<CreateTankCommand, Guid>
 
     public async Task<Guid> Handle(CreateTankCommand request, CancellationToken cancellationToken)
     {
-        var tank = new Tank(request.Name, request.Capacity);
+        var tank = new Tank(request.Name, request.CapacityLiters);
 
         await _tankRepository.AddAsync(tank);
 

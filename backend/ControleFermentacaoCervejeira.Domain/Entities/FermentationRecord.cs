@@ -43,6 +43,15 @@ public class FermentationRecord
         Status = CalculateStatus(beerLimits);
     }
 
+    public void Update(decimal temperature, decimal ph, decimal extract, string notes, Beer beer)
+    {
+        Temperature = temperature;
+        Ph = ph;
+        Extract = extract;
+        Notes = notes;
+        Status = CalculateStatus(beer);
+    }
+
     private FermentationStatus CalculateStatus(Beer beer)
     {
         // 1. Validação de "Fora do Padrão"

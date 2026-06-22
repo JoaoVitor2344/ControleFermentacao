@@ -7,4 +7,6 @@ public class GetAllBeersQuery : IRequest<IEnumerable<Beer>>
 {
     // Quando true, a query retorna também as cervejas logicamente excluídas (soft delete)
     public bool IncludeDeleted { get; set; } = false;
+    public string? Name { get; set; }
+    public string? Style { get; set; }
 }

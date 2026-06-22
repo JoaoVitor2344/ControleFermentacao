@@ -30,12 +30,21 @@ export interface Tank {
 
 export interface FermentationRecord {
     id: string;
+    batchNumber: string;
     temperature: number;
     ph: number;
     extract: number;
     notes: string;
     recordedAt: string;
     status: FermentationStatus;
+}
+
+export interface PagedResult<T> {
+    items: T[];
+    totalCount: number;
+    page: number;
+    pageSize: number;
+    totalPages: number;
 }
 
 export interface FermentationSummary {

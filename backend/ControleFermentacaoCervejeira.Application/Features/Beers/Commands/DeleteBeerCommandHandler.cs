@@ -1,7 +1,7 @@
 ﻿using ControleFermentacaoCervejeira.Domain.Interfaces;
 using MediatR;
 
-namespace ControleFermentacaoCervejeira.Application.Features.FermentationRecords.Commands;
+namespace ControleFermentacaoCervejeira.Application.Features.Beers.Commands;
 
 public class DeleteBeerCommandHandler : IRequestHandler<DeleteBeerCommand, bool>
 {

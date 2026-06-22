@@ -1,7 +1,7 @@
 ﻿using ControleFermentacaoCervejeira.Domain.Interfaces;
 using MediatR;
 
-namespace ControleFermentacaoCervejeira.Application.Features.FermentationRecords.Commands;
+namespace ControleFermentacaoCervejeira.Application.Features.Beers.Commands;
 
 public class UpdateBeerCommandHandler : IRequestHandler<UpdateBeerCommand, bool>
 {

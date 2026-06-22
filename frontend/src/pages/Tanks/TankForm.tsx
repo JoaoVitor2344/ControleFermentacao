@@ -1,16 +1,16 @@
-import Button from "../../components/Button.tsx";
-import type {Tank} from "../../types";
-import {useNavigate, useParams} from "react-router-dom";
-import {useForm} from "react-hook-form";
-import {useEffect} from "react";
-import {createTank, getTankById, updateTank} from "../../api/api.ts";
-import Input from "../../components/Input.tsx";
+import {useEffect} from 'react';
+import {useForm} from 'react-hook-form';
+import {createTank, getTankById, updateTank} from '../../api/api';
+import Button from '../../components/Button';
+import Input from '../../components/Input';
+import {formatDecimal, parseDecimal} from '../../utils/format';
 
-type TankFormData = Omit<Tank, 'id'>;
+interface TankFormData {
+    name: string;
+    capacityLiters: string;
+}
 
-export default function TankForm() {
-    const {id} = useParams();
-    const navigate = useNavigate();
+export default function TankForm({id, onClose}: { id?: string; onClose: () => void }) {
     const isEditing = !!id;
 
     const {
@@ -22,14 +22,17 @@ export default function TankForm() {
 
     useEffect(() => {
         if (isEditing) {
-            getTankById(id).then(tank => reset(tank));
+            getTankById(id).then(tank => reset({
+                name: tank.name,
+                capacityLiters: formatDecimal(tank.capacityLiters),
+            }));
         }
     }, [id]);
 
     async function onSubmit(data: TankFormData) {
         const payload = {
-            ...data,
-            capacityLiters: Number(data.capacityLiters),
+            name: data.name,
+            capacityLiters: parseDecimal(data.capacityLiters),
         };
 
         if (isEditing) {
@@ -38,16 +41,16 @@ export default function TankForm() {
             await createTank(payload);
         }
 
-        navigate('/tanques');
+        onClose();
     }
 
     return (
-        <div className="max-w-md">
-            <h2 className="text-2xl font-bold text-navy-dark mb-6">
+        <div className="p-6">
+            <h2 className="text-xl font-bold text-navy-dark mb-6">
                 {isEditing ? 'Editar Tanque' : 'Novo Tanque'}
             </h2>
 
-            <form onSubmit={handleSubmit(onSubmit)} className="bg-white rounded-xl p-6 shadow-sm space-y-4">
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                 <Input
                     label="Nome"
                     error={errors.name?.message}
@@ -55,8 +58,8 @@ export default function TankForm() {
                 />
                 <Input
                     label="Capacidade (Litros)"
-                    type="number"
-                    step="0.01"
+                    inputMode="decimal"
+                    placeholder="Ex: 500,0"
                     error={errors.capacityLiters?.message}
                     {...register('capacityLiters', {required: 'Capacidade é obrigatória'})}
                 />
@@ -65,7 +68,7 @@ export default function TankForm() {
                     <Button type="submit" disabled={isSubmitting}>
                         {isSubmitting ? 'Salvando...' : 'Salvar'}
                     </Button>
-                    <Button type="button" variant="secondary" onClick={() => navigate('/tanques')}>
+                    <Button type="button" variant="secondary" onClick={onClose}>
                         Cancelar
                     </Button>
                 </div>

@@ -25,13 +25,19 @@ public class BeerRepository : IBeerRepository
         await _context.SaveChangesAsync();
     }
 
-    public async Task<IEnumerable<Beer>> GetAllAsync(bool includeDeleted = false)
+    public async Task<IEnumerable<Beer>> GetAllAsync(bool includeDeleted = false, string? name = null, string? style = null)
     {
         // IgnoreQueryFilters() desativa o filtro global de soft delete do DbContext,
         // retornando todos os registros incluindo os logicamente excluídos
         var query = includeDeleted
             ? _context.Beers.IgnoreQueryFilters()
             : _context.Beers.AsQueryable();
+
+        if (!string.IsNullOrWhiteSpace(name))
+            query = query.Where(beer => EF.Functions.ILike(beer.Name, $"%{name.Trim()}%"));
+
+        if (!string.IsNullOrWhiteSpace(style))
+            query = query.Where(beer => EF.Functions.ILike(beer.Style, $"%{style.Trim()}%"));
 
         return await query.ToListAsync();
     }

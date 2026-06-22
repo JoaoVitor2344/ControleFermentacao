@@ -15,7 +15,6 @@ public class GetAllBeersQueryHandler : IRequestHandler<GetAllBeersQuery, IEnumer
 
     public async Task<IEnumerable<Beer>> Handle(GetAllBeersQuery request, CancellationToken cancellationToken)
     {
-        // Repassa o parâmetro para o repositório, que decide se ignora o filtro de soft delete
-        return await _beerRepository.GetAllAsync(request.IncludeDeleted);
+        return await _beerRepository.GetAllAsync(request.IncludeDeleted, request.Name, request.Style);
     }
 }

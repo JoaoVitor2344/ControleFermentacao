@@ -23,6 +23,7 @@ public class
         return records.Select(r => new FermentationRecordDto
         {
             Id = r.Id,
+            BatchNumber = r.BatchNumber,
             Temperature = r.Temperature,
             Ph = r.Ph,
             Extract = r.Extract,

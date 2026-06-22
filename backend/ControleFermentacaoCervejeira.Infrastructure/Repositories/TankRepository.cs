@@ -25,13 +25,26 @@ public class TankRepository : ITankRepository
         await _context.SaveChangesAsync();
     }
 
-    public async Task<IEnumerable<Tank>> GetAllAsync(bool includeDeleted = false)
+    public async Task<IEnumerable<Tank>> GetAllAsync(
+        bool includeDeleted = false,
+        string? name = null,
+        decimal? minCapacityLiters = null,
+        decimal? maxCapacityLiters = null)
     {
         // IgnoreQueryFilters() desativa o filtro global de soft delete do DbContext,
         // retornando todos os registros incluindo os logicamente excluídos
         var query = includeDeleted
             ? _context.Tanks.IgnoreQueryFilters()
             : _context.Tanks.AsQueryable();
+
+        if (!string.IsNullOrWhiteSpace(name))
+            query = query.Where(tank => EF.Functions.ILike(tank.Name, $"%{name.Trim()}%"));
+
+        if (minCapacityLiters.HasValue)
+            query = query.Where(tank => tank.CapacityLiters >= minCapacityLiters.Value);
+
+        if (maxCapacityLiters.HasValue)
+            query = query.Where(tank => tank.CapacityLiters <= maxCapacityLiters.Value);
 
         return await query.ToListAsync();
     }

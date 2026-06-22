@@ -3,6 +3,7 @@
 public class FermentationRecordDto
 {
     public Guid Id { get; set; }
+    public string BatchNumber { get; set; } = string.Empty;
     public decimal Temperature { get; set; }
     public decimal Ph { get; set; }
     public decimal Extract { get; set; }

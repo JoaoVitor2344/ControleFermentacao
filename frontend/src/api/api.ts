@@ -1,9 +1,15 @@
 import api from "./client.ts";
 import type { Tank } from "../types";
 
+export interface TankFilters {
+    name?: string;
+    minCapacityLiters?: number;
+    maxCapacityLiters?: number;
+}
+
 // includeDeleted: quando true envia ?includeDeleted=true para o backend retornar registros removidos
-export const getTanks = (includeDeleted = false) =>
-    api.get<Tank[]>('/tanks', { params: { includeDeleted } }).then(r => r.data);
+export const getTanks = (includeDeleted = false, filters: TankFilters = {}) =>
+    api.get<Tank[]>('/tanks', {params: {includeDeleted, ...filters}}).then(r => r.data);
 
 export const getTankById = (id: string) =>
     api.get<Tank>(`/tanks/${id}`).then(r => r.data);

@@ -15,7 +15,7 @@ export default function Dashboard() {
     }, []);
 
     if (loading) {
-        return <p className="text-gray">Carregando...</p>;
+        return null;
     }
 
     return (

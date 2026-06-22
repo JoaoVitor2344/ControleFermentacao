@@ -15,7 +15,13 @@ public class GetAllTanksQueryHandler : IRequestHandler<GetAllTanksQuery, IEnumer
 
     public async Task<IEnumerable<Tank>> Handle(GetAllTanksQuery request, CancellationToken cancellationToken)
     {
-        // Repassa o parâmetro para o repositório, que decide se ignora o filtro de soft delete
-        return await _tankRepository.GetAllAsync(request.IncludeDeleted);
+        if (request.MinCapacityLiters > request.MaxCapacityLiters)
+            throw new ArgumentException("A capacidade mínima não pode ser maior que a capacidade máxima.");
+
+        return await _tankRepository.GetAllAsync(
+            request.IncludeDeleted,
+            request.Name,
+            request.MinCapacityLiters,
+            request.MaxCapacityLiters);
     }
 }

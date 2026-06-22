@@ -1,9 +1,14 @@
 import api from "./client.ts";
 import type { Beer } from "../types";
 
+export interface BeerFilters {
+    name?: string;
+    style?: string;
+}
+
 // includeDeleted: quando true envia ?includeDeleted=true para o backend retornar registros removidos
-export const getBeers = (includeDeleted = false) =>
-    api.get<Beer[]>('/beers', { params: { includeDeleted } }).then(r => r.data);
+export const getBeers = (includeDeleted = false, filters: BeerFilters = {}) =>
+    api.get<Beer[]>('/beers', {params: {includeDeleted, ...filters}}).then(r => r.data);
 
 export const getBeerById = (id: string) =>
     api.get<Beer>(`/beers/${id}`).then(r => r.data);

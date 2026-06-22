@@ -26,9 +26,17 @@ public class BeersController : ControllerBase
     // includeDeleted: parâmetro opcional de query string para exibir cervejas removidas
     // Exemplo: GET /api/beers?includeDeleted=true
     [HttpGet]
-    public async Task<IActionResult> GetAll([FromQuery] bool includeDeleted = false)
+    public async Task<IActionResult> GetAll(
+        [FromQuery] bool includeDeleted = false,
+        [FromQuery] string? name = null,
+        [FromQuery] string? style = null)
     {
-        var beers = await _mediator.Send(new GetAllBeersQuery { IncludeDeleted = includeDeleted });
+        var beers = await _mediator.Send(new GetAllBeersQuery
+        {
+            IncludeDeleted = includeDeleted,
+            Name = name,
+            Style = style
+        });
         return Ok(beers);
     }
 
@@ -46,8 +54,7 @@ public class BeersController : ControllerBase
     [HttpPut("{id}")]
     public async Task<IActionResult> Update(Guid id, [FromBody] UpdateBeerCommand command)
     {
-        if (id != command.Id)
-            return BadRequest(new { Message = "O ID da rota não bate com o ID do corpo da requisição." });
+        command.Id = id;
 
         var success = await _mediator.Send(command);
         if (!success) return NotFound(new { Message = "Cerveja não encontrada para edição." });
